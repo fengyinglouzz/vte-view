@@ -233,7 +233,6 @@
 						try{
 							const jsonString = JSON.stringify(params);
 							const result = await addPatient({jsonString:jsonString});
-							debugger;
 							if (result.status == 1) {
 								console.log(result)
 								this.$message({
