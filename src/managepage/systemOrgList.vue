@@ -69,25 +69,25 @@
 
             <el-dialog title="科室" v-model="addDepartmentFormVisible" :close-on-click-modal="false">
                 <el-form rules="addDepartmentFormrules" :model="addDepartmentForm" ref="addDepartmentForm">
+                    <el-col :span="24">
+                        <el-form-item label="科室代码" prop="orgCode">
+                            <el-input v-model="addDepartmentForm.orgCode" :disabled="true" style="width: 10%"></el-input>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="24" v-if="show">
                         <el-form-item label="科室名称" prop="orgId">
-                            <el-input v-model="addDepartmentForm.orgId"></el-input>
+                            <el-input v-model="addDepartmentForm.orgId" style="width: 80%"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="科室名称" prop="orgName">
-                            <el-input v-model="addDepartmentForm.orgName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="科室代码" prop="orgCode">
-                            <el-input v-model="addDepartmentForm.orgCode" :disabled="true"></el-input>
+                            <el-input v-model="addDepartmentForm.orgName" style="width: 80%"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="科室类型" prop="orgType">
                             <el-select v-model="addDepartmentForm.orgType" clearable placeholder="请选择"
-                                       style="width: 100%;">
+                                       style="width: 80%;">
                                 <el-option
                                     v-for="item in departmentOptions"
                                     :key="item.value"
@@ -261,7 +261,7 @@
             adddEpartmentClick(row) {
                 this.addDepartmentFormVisible = true;
                 this.clearFrom();
-                this.addDepartmentForm.orgCode = row.orgCode+"-";
+                this.addDepartmentForm.orgCode = row.orgCode;
             },
             addDepartmentinfo() {
                 this.$refs.addDepartmentForm.validate(async (valid) => {
