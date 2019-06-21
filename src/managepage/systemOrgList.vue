@@ -81,7 +81,7 @@
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="科室代码" prop="orgCode">
-                            <el-input v-model="addDepartmentForm.orgCode"></el-input>
+                            <el-input v-model="addDepartmentForm.orgCode" :disabled="true"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
@@ -261,7 +261,7 @@
             adddEpartmentClick(row) {
                 this.addDepartmentFormVisible = true;
                 this.clearFrom();
-                this.addDepartmentForm.orgCode = row.orgCode;
+                this.addDepartmentForm.orgCode = row.orgCode+"-";
             },
             addDepartmentinfo() {
                 this.$refs.addDepartmentForm.validate(async (valid) => {
