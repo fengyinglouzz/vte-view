@@ -16,16 +16,26 @@
 			<el-date-picker type="month" v-model="monthTime" placeholder="请选择月" :class="{'hideContent': month}" @change="changeMonthTime(monthTime)"></el-date-picker>
 			<el-date-picker type="week" :picker-options="pickerOptions" format="yyyy 年第 WW 周" v-model="weekTime" firstDayOfWeek="1" placeholder="请选择周" :class="{'hideContent': week}" @change="changeWeekTime(weekTime)"></el-date-picker>
 		</div>
+		<el-button class="exportAll" @click="exportExcel">导出质控视图数据</el-button>
+		<el-dialog title="导出历史记录" v-model="exportExcelVisible" :close-on-click-modal="false">
+			<p>是否确认导出历史记录？</p>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="exportCancelExcel">取 消</el-button>
+				<el-button type="primary" @click="exportAllInExcel">确 定</el-button>
+			</div>
+		</el-dialog>
     </div>
 </template>
 
 <script>
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {getDictData} from '@/common/dictCache'
+	import {getDictData} from '@/common/dictCache'
+	import {exportAll} from '@/api/getData'
 
     export default {
     	data(){
     		return {
+				exportExcelVisible: false,
     			baseImgPath,
 				yearTime: '',
 				monthTime: '',
@@ -45,6 +55,74 @@
 			//this.weekTime = new Date();
     	},
 		methods: {
+			exportAllInExcel() {
+				var dateStr = this.getDateString(); 
+				var dateType = this.active;
+				this.exportConfirmExcel(dateStr,dateType)
+			},
+			async exportConfirmExcel(dateStr,dateType){
+				const loading = this.$loading({
+		          lock: true,
+		          text: '正在导出...',
+		          spinner: 'el-icon-loading',
+		          background: 'rgba(0, 0, 0, 0.7)'
+		        });
+				const params = {};
+					params.date = dateStr;
+					params.dateType = dateType;
+				const jsonString = JSON.stringify(params);
+				const result = await exportAll({jsonString:jsonString});
+				this.exportCancelExcel();
+				if(result.status == '1'){
+					window.open(result.filePath);
+					loading.close();
+					/*this.$message({
+						type: 'success',
+						message: '导出成功'
+					});*/
+				}else{
+					this.$message({
+						type: 'error',
+						message: result.message
+					});
+				}
+			},
+			exportExcel() {
+	            console.log("导出");
+				this.exportExcelVisible = true;
+			},
+			exportCancelExcel(){
+				console.log("取消导出");
+				this.exportExcelVisible = false;
+			},
+			getDateString(){
+				var dateStr = ""; 
+				var dateType = this.active;
+				if(dateType == '1' && this.yearTime){
+					dateStr = this.yearTime.getFullYear();
+				}else if(dateType == '2' && this.monthTime){
+					dateStr = this.monthTime.getFullYear() + "-";
+					const mouthc = this.monthTime.getMonth() + 1;
+					if(mouthc<=9){
+						dateStr = dateStr+"0";
+					}
+					dateStr = dateStr+mouthc;
+				}else if(dateType == '3' && this.weekTime){
+					
+					dateStr = this.weekTime.getFullYear() + "-";
+					const mouthc = this.weekTime.getMonth() + 1;
+					if(mouthc<=9){
+						dateStr = dateStr+"0";
+					}
+					dateStr = dateStr+mouthc + "-" ;
+					const datec = this.weekTime.getDate();
+					if(datec<=9){
+						dateStr = dateStr+"0";
+					}
+					dateStr = dateStr+datec;
+				}
+				return dateStr;
+			},
 			/* 切换时间类型 */
 			changePatientActive(){
 				if( this.active == 1 ){

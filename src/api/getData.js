@@ -82,6 +82,12 @@ export const getQueryCount = data => fetch('/vtePatientAssessment/queryCount', d
 export const getQueryListExport = data => fetch('/vtePatientAssessment/queryListExport', data, 'POST');
 
 /**
+ * 导出全部质控
+ * @param {*} data 
+ */
+export const exportAll = data => fetch('/vtePatientHospitInfo/exportAll', data, 'POST');
+
+/**
  * 获取患者详情策略查询
  */
 
